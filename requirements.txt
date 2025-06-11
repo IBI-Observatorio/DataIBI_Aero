@@ -1,0 +1,11 @@
+pandas
+duckdb
+openai
+tenacity
+streamlit
+matplotlib
+streamlit-mic-recorder
+pyarrow
+plotly
+plotly
+streamlit-card\
