@@ -1,5 +1,11 @@
 import os
+from pathlib import Path
 from openai import OpenAI
+from dotenv import load_dotenv
+
+# Carrega variáveis de ambiente do arquivo .env
+env_path = Path(__file__).parent.parent / '.env'
+load_dotenv(env_path, override=True)
 
 # --- Configuração da API da OpenAI ---
 try:
