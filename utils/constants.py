@@ -1,17 +1,31 @@
 import os
 from pathlib import Path
 from openai import OpenAI
-from dotenv import load_dotenv
 
-# Carrega variáveis de ambiente do arquivo .env
-env_path = Path(__file__).parent.parent / '.env'
-load_dotenv(env_path, override=True)
+# Tenta importar streamlit para verificar se está rodando no Streamlit Cloud
+try:
+    import streamlit as st
+    # Se conseguir importar streamlit e houver secrets, usa os secrets
+    if hasattr(st, 'secrets') and 'OPENAI_API_KEY' in st.secrets:
+        api_key = st.secrets["OPENAI_API_KEY"]
+    else:
+        # Caso contrário, tenta usar o .env local
+        from dotenv import load_dotenv
+        env_path = Path(__file__).parent.parent / '.env'
+        load_dotenv(env_path, override=True)
+        api_key = os.environ.get("OPENAI_API_KEY")
+except ImportError:
+    # Se não conseguir importar streamlit, usa .env local
+    from dotenv import load_dotenv
+    env_path = Path(__file__).parent.parent / '.env'
+    load_dotenv(env_path, override=True)
+    api_key = os.environ.get("OPENAI_API_KEY")
 
 # --- Configuração da API da OpenAI ---
 try:
-    client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+    client = OpenAI(api_key=api_key)
     if not client.api_key:
-        raise ValueError("OPENAI_API_KEY não configurada. Por favor, defina a variável de ambiente OPENAI_API_KEY.")
+        raise ValueError("OPENAI_API_KEY não configurada. Por favor, defina a variável de ambiente OPENAI_API_KEY ou adicione nos secrets do Streamlit.")
 except Exception as e:
     client = None 
     print(f"Erro ao configurar a API da OpenAI no chatbot_functions: {e}")
