@@ -7,5 +7,5 @@ matplotlib
 streamlit-mic-recorder
 pyarrow
 plotly
-plotly
-streamlit-card\
+streamlit-card
+python-dotenv\
